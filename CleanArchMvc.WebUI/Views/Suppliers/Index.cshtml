@@ -1,0 +1,189 @@
+﻿@model IEnumerable<EverSoftSupplier.Application.DTOs.SupplierDTO>
+
+
+@{ ViewData["Title"] = "Supplier Management"; }
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+<script src="~/js/site.js"></script>
+<script>
+    function OpenAddPopup() {
+       
+        $("#AddUpdateModelLabel").text("Add Supplier")
+     
+        $('#AddUpdateModel').modal('show');
+       
+        $('#btnUpdatepatient').hide();
+        $('#btnAddpatient').show();
+    }
+    $(document).ready(function () {
+       
+
+    
+    });
+    function Search() {
+
+        var searchTerm = $('#searchText').val();
+
+
+        $.ajax({
+            url: "/Suppliers/ViewCategory",
+            data: JSON.stringify(searchTerm),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+
+
+            },
+            error: function (errormessage) {
+
+            }
+        });
+    }
+    function AddSupplier() {
+      
+        var patientObj = {
+            Id: $('#Id').val(),
+            Code: $('#txtCode').val(),
+            Name: $('#txtName').val(),
+            TelephoneNumber: $('#txtTelephone').val()
+
+        };
+        $.ajax({
+            url: "/Suppliers/AddSupplier",
+            data: JSON.stringify(patientObj),
+            type: "POST",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+
+                $('#AddUpdateModel').modal('hide');
+            },
+            error: function (errormessage) {
+                //alert(errormessage.responseText);
+                $('#AddUpdateModel').modal('hide');
+            }
+        });
+    }
+</script>
+<style>
+   
+    .modal-lg {
+        max-width: 80%;
+    }
+
+    .pull-right {
+        float: right;
+    }
+</style>
+<div>
+    <h2>@ViewData["Title"]</h2>
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <div>
+            <div class="pull-left">
+                <a @*asp-action="Create"*@ id="insert" onclick="OpenAddPopup()" class="btn btn-primary">
+                    <span title="Register New" class="fas fa-plus"></span> Add New
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div>
+    <div class="pull-right">
+        <input type="text" id="searchText" />
+        <a @*asp-action="Create"*@ id="searchterm" onclick="Search()" class="btn btn-primary">
+            <span title="Register New" class="fas fa-plus"></span> Search
+        </a>
+    </div>
+</div>
+<br />
+<div class="panel panel-default">
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                @*<th>
+                        @Html.DisplayNameFor(model => model.Code)
+                    </th>*@
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TelephoneNumber)
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+<tr>
+    <td>
+            @Html.DisplayFor(modelItem => item.Code)
+        </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Name)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.TelephoneNumber)
+    </td>
+    <td>
+        <a asp-action="Edit" asp-route-id="@item.Id" title="Edit" class="btn btn-warning">
+            <span class="fas fa-edit">Edit</span>
+        </a>
+
+        <a asp-action="Details" asp-route-id="@item.Id" title="Details" class="btn btn-primary">
+            <span class="fas fa-search">Details</span>
+        </a>
+
+        <a asp-action="Delete" asp-route-id="@item.Id" title="Delete" class="btn btn-danger">
+            <span class="fas fa-trash-alt">Delete</span>
+        </a>
+    </td>
+</tr>}
+        </tbody>
+    </table>
+</div>
+
+
+
+<div class="modal fade" id="AddUpdateModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h4 class="modal-title" id="AddUpdateModelLabel">Add Patient</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    @* hidden filed for storing Id *@
+                    <input type="hidden" id="Id" />
+                    <div class="form-group">
+                        <label for="txtCode">Code</label>
+                        <input type="text" class="form-control" id="txtCode" placeholder="Code" />
+                    </div>
+                    <div class="form-group">
+                        <label for="txtName">Name</label>
+                        <input type="text" class="form-control" id="txtName" placeholder="Name" />
+                    </div>
+                    <div class="form-group">
+                        <label for="txtTelephone">Telephone</label>
+                        <input type="email" class="form-control" id="txtTelephone" placeholder="Telephone" />
+                    </div>
+                    
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnAddpatient" onclick="AddSupplier()">Save</button>
+                <button type="button" class="btn btn-primary" id="btnUpdatepatient" style="display:none;" onclick="UpdatePatient()">Update</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/site.js"></script>
